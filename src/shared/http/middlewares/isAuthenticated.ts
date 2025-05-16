@@ -6,7 +6,7 @@ import { NextFunction, Response, Request } from "express";
 interface ITokenPayLoad {
     iat: number,
     exp: number,
-    subject: string,
+    sub: string,
 }
 
 export default function isAuthenticated(req: Request, res: Response, next: NextFunction){
@@ -18,10 +18,8 @@ export default function isAuthenticated(req: Request, res: Response, next: NextF
 
     try {
         const decodeToken = verify(token, auth.jwt.secret)
-        const {subject} = decodeToken as ITokenPayLoad
-        req.user = {id: subject}
-        console.log(decodeToken)
-
+        const {sub} = decodeToken as ITokenPayLoad
+        req.user = {id: sub}
         return next();
     } catch (error) {
         throw new AppError("Invalid JWT Token", 401)
